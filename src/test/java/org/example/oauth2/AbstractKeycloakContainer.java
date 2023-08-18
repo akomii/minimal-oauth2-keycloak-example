@@ -28,3 +28,4 @@ abstract class AbstractKeycloakContainer {
         KEYCLOAK.start();
         KEYCLOAK_URL = "http://" + KEYCLOAK.getHost() + ":" + HOST_PORT;
     }
+}
