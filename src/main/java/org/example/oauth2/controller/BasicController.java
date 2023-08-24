@@ -1,7 +1,8 @@
 package org.example.oauth2.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.example.oauth2.enums.UserRole;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 // TODO add/remove org to user by admin
 // TODO let admin to everything
 
+// TODO get organization infos
+// TODO get user attributes
+
 @RestController
 public class BasicController {
     
@@ -32,13 +36,13 @@ public class BasicController {
         return "My not public home";
     }
     
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @Secured(UserRole.Code.USER)
     @GetMapping("/protected")
     public String endpoint3(@AuthenticationPrincipal OAuth2User user) {
         return String.format("Hello to protected User %s!", user.getName());
     }
     
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Secured(UserRole.Code.ADMIN)
     @GetMapping("/premium")
     public String endpoint4(@AuthenticationPrincipal OAuth2User user) {
         return String.format("Premium to premium User %s!", user.getName());

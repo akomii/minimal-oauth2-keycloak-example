@@ -13,6 +13,7 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/oauth2-demo-client
         provider:
           my-oauth2-client:
+            logout-url: http://localhost:8180/realms/oauth2-demo-realm/protocol/openid-connect/logout
             issuer-uri: http://localhost:8180/realms/oauth2-demo-realm
             user-name-attribute: preferred_username
 
