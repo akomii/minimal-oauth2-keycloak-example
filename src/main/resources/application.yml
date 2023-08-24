@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          my-custom-client:
+            client-id: oauth2-demo-client
+            scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/oauth2-demo-client
+        provider:
+          my-custom-client:
+            issuer-uri: http://localhost:8180/realms/oauth2-demo-realm
+            user-name-attribute: preferred_username
+
+logging:
+  level:
+    org.springframework.security: DEBUG
