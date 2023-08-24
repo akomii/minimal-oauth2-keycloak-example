@@ -6,13 +6,13 @@ spring:
     oauth2:
       client:
         registration:
-          my-custom-client:
+          my-oauth2-client:
             client-id: oauth2-demo-client
-            scope: openid
             authorization-grant-type: authorization_code
+            scope: openid
             redirect-uri: http://localhost:8080/login/oauth2/code/oauth2-demo-client
         provider:
-          my-custom-client:
+          my-oauth2-client:
             issuer-uri: http://localhost:8180/realms/oauth2-demo-realm
             user-name-attribute: preferred_username
 
