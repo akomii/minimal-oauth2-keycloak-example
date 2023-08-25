@@ -29,6 +29,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
         http.oauth2Login();
+        
+        http.cors().and().csrf().disable();
+        
         http.logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) ->
                         response.sendRedirect(logoutUrl))
@@ -49,6 +52,13 @@ public class SecurityConfig {
                     .filter(userInfo -> userInfo.hasClaim("roles"))
                     .map(userInfo -> (Collection<String>) userInfo.getClaim("roles"))
                     .forEach(roles -> mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles, "ROLE_")));
+            authorities.stream()
+                    .filter(OidcUserAuthority.class::isInstance)
+                    .map(OidcUserAuthority.class::cast)
+                    .map(OidcUserAuthority::getUserInfo)
+                    .filter(groupInfo -> groupInfo.hasClaim("groups"))
+                    .map(groupInfo -> (Collection<String>) groupInfo.getClaim("groups"))
+                    .forEach(groups -> mappedAuthorities.addAll(generateAuthoritiesFromClaim(groups, "GROUP_")));
             return mappedAuthorities;
         };
     }
