@@ -1,4 +1,4 @@
-package org.example.oauth2.enums;
+package org.example.oauth2.server.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

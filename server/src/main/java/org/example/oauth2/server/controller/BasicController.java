@@ -1,7 +1,7 @@
-package org.example.oauth2.controller;
+package org.example.oauth2.server.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.oauth2.enums.UserRole;
+import org.example.oauth2.server.enums.UserRole;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;

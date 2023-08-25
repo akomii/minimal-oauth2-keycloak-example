@@ -1,4 +1,4 @@
-package org.example.oauth2;
+package org.example.oauth2.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

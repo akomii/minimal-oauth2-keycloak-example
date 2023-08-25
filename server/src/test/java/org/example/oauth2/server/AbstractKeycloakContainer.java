@@ -1,4 +1,4 @@
-package org.example.oauth2;
+package org.example.oauth2.server;
 
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
