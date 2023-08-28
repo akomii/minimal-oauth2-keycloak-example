@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MyApp {
     
     public static void main(String[] args) {
-        SpringApplication.run(org.example.oauth2.server.MyApp.class, args);
+        SpringApplication.run(MyApp.class, args);
     }
 }
