@@ -12,23 +12,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-    
-    @Value("${spring.security.oauth2.client.provider.my-oauth2-client.logout-url}")
-    private String logoutUrl;
-    
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
-        http.oauth2Login();
-        
-        http.cors().and().csrf().disable();
-        
-        http.logout(logout -> logout
-                .logoutSuccessHandler((request, response, authentication) ->
-                        response.sendRedirect(logoutUrl))
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID"));
-        return http.build();
-    }
+  
+  @Value("${spring.security.oauth2.client.provider.my-oauth2-client.logout-url}")
+  private String logoutUrl;
+  
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
+    http.cors().and().csrf().disable();
+    http.oauth2Login();
+    http.logout(logout -> logout
+        .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect(logoutUrl))
+        .invalidateHttpSession(true)
+        .clearAuthentication(true)
+        .deleteCookies("JSESSIONID"));
+    return http.build();
+  }
 }
