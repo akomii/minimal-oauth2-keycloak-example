@@ -16,6 +16,8 @@ spring:
             logout-url: http://localhost:8180/realms/oauth2-demo-realm/protocol/openid-connect/logout
             issuer-uri: http://localhost:8180/realms/oauth2-demo-realm
             user-name-attribute: preferred_username
+            claims:
+              roles: resource_access.oauth2-demo-client.roles #resource_access={oauth2-demo-client={roles=[xxx]}}
 
 logging:
   level:
