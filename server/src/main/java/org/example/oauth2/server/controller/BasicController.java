@@ -20,24 +20,32 @@ public class BasicController {
   
   @GetMapping("/home")
   public String securedEndpoint(@AuthenticationPrincipal OAuth2User user) {
-    System.out.println(user.getAttributes());
-    
-    Optional<String> fullname = Optional.ofNullable(user.getAttribute("name"));
-    if (fullname.isPresent()) {
-      return String.format("Hello, %s!", fullname.get());
-    }
-    return "Hello, Stranger!";
+    return printUserName(user);
   }
   
   @Secured(UserRole.Code.ADMIN)
-  @GetMapping("/premium")
+  @GetMapping("/premium/admin")
   public String premiumEndpoint(@AuthenticationPrincipal OAuth2User user) {
-    return "Hello to premium User!";
+    return printUserName(user);
+  }
+  
+  @Secured({UserRole.Code.USER, UserRole.Code.ADMIN})
+  @GetMapping("/premium/both")
+  public String premiumEndpoint2(@AuthenticationPrincipal OAuth2User user) {
+    return printUserName(user);
   }
   
   @GetMapping("/logout")
   public String logout(HttpServletRequest request) throws Exception {
     request.logout();
     return "redirect:/";
+  }
+  
+  private String printUserName(OAuth2User user) {
+    Optional<String> fullname = Optional.ofNullable(user.getAttribute("name"));
+    if (fullname.isPresent()) {
+      return String.format("Hello, %s!", fullname.get());
+    }
+    return "Hello, Stranger!";
   }
 }
