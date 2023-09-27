@@ -58,7 +58,7 @@
                 }
             ],
             "clientRoles": {
-                "oauth2-demo-client": [ "USER" ]
+                "oauth2-demo-client": [ "USER", "USER2" ]
             }
         },
         {
