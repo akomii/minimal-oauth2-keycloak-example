@@ -18,14 +18,16 @@ public class SecurityConfig {
   
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
-    http.cors().and().csrf().disable();
+    http.authorizeHttpRequests(authorize -> authorize
+        .requestMatchers("/public").permitAll()
+        .anyRequest().authenticated());
     http.oauth2Login();
     http.logout(logout -> logout
         .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect(logoutUrl))
         .invalidateHttpSession(true)
         .clearAuthentication(true)
         .deleteCookies("JSESSIONID"));
+    http.cors().and().csrf().disable();
     return http.build();
   }
 }
