@@ -50,10 +50,10 @@ public class OAuth2UserInfoMapper {
       if (value instanceof Map) {
         value = ((Map<?, ?>) value).get(key);
         if (value == null) {
-          throw new IllegalArgumentException("Key '" + key + "' not found in the map.");
+          throw new IllegalArgumentException(String.format("Key '%s' not found in the map.", key));
         }
       } else {
-        throw new IllegalArgumentException("Key '" + key + "' cannot be accessed because it's not a map.");
+        throw new IllegalArgumentException(String.format("Key '%s' annot be accessed because it's not a map.", key));
       }
     }
     if (value instanceof List) {
