@@ -1,6 +1,6 @@
 package org.example.oauth2.server;
 
-import org.example.oauth2.server.conf.OAuth2UserInfoMapper;
+import org.example.oauth2.server.conf.Oauth2UserInfoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class TestOAuth2UserInfoMapper {
+public class TestOauth2UserInfoMapper {
   
-  private OAuth2UserInfoMapper userInfoMapper;
+  private Oauth2UserInfoMapper userInfoMapper;
   
   @BeforeEach
   public void setUp() {
-    userInfoMapper = new OAuth2UserInfoMapper();
+    userInfoMapper = new Oauth2UserInfoMapper();
   }
   
   private List<String> getNestedListForKey(Map<String, Object> input, String[] keys) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method method = OAuth2UserInfoMapper.class.getDeclaredMethod("getNestedListForKey", Map.class, String[].class);
+    Method method = Oauth2UserInfoMapper.class.getDeclaredMethod("getNestedListForKey", Map.class, String[].class);
     method.setAccessible(true);
     return (List<String>) method.invoke(userInfoMapper, input, keys);
   }
