@@ -1,11 +1,8 @@
 package org.example.oauth2.server;
 
+import java.nio.file.Paths;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Properties;
 
 abstract class AbstractKeycloakContainer {
   
@@ -16,9 +13,12 @@ abstract class AbstractKeycloakContainer {
   protected static final String DEFAULT_ADMIN_NAME = "admin";
   protected static final String DEFAULT_ADMIN_PASSWORD = "password";
   
-  // analog to realm-import.json
+  // analog to /resources/realm.json
   protected static final String DEFAULT_REALM_NAME = "oauth2-demo-realm";
   protected static final String DEFAULT_CLIENT_NAME = "oauth2-demo-client";
+  
+  // analog to pom.xml
+  private static final String KEYCLOAK_VERISON = "22.0.1";
   
   private static final int HOST_PORT = 8180;
   private static final int KEYCLOAK_PORT = 8080;
@@ -32,24 +32,13 @@ abstract class AbstractKeycloakContainer {
   }
   
   private static FixedHostPortGenericContainer initKeycloakContainer() {
-    String version = getKeycloakVersionFromProperties();
-    return new FixedHostPortGenericContainer<>("quay.io/keycloak/keycloak:" + version)
+    return new FixedHostPortGenericContainer<>("quay.io/keycloak/keycloak:" + KEYCLOAK_VERISON)
       .withFixedExposedPort(HOST_PORT, KEYCLOAK_PORT)
       .withEnv("KEYCLOAK_ADMIN", DEFAULT_ADMIN_NAME)
       .withEnv("KEYCLOAK_ADMIN_PASSWORD", DEFAULT_ADMIN_PASSWORD)
       .withFileSystemBind(REALM_IMPORT_PATH, "/opt/keycloak/data/import/realm.json")
       .withCommand("start-dev", "--import-realm")
       .waitingFor(Wait.forHttp("/admin").forStatusCode(200));
-  }
-  
-  private static String getKeycloakVersionFromProperties() {
-    try {
-      Properties props = new Properties();
-      props.load(AbstractKeycloakContainer.class.getClassLoader().getResourceAsStream("project.properties"));
-      return props.getProperty("keycloak.version");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
   
   private static String buildKeycloakUrl() {
