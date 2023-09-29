@@ -48,8 +48,14 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.cors().and().csrf().disable();
     http.authorizeHttpRequests(
-        authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
+        authorize ->
+            authorize
+                .requestMatchers("/public", "/error", "/login")
+                .permitAll()
+                .anyRequest()
+                .authenticated());
     http.oauth2Login();
     http.logout(
         logout ->
