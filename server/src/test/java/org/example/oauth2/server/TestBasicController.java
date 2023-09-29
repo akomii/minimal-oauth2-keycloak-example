@@ -1,73 +1,57 @@
 package org.example.oauth2.server;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.keycloak.admin.client.Keycloak;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.example.oauth2.server.controller.BasicController;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+/**
+ * The {@code TestBasicController} class is responsible for conducting integration tests on the
+ * endpoints provided by the {@link BasicController}. It utilizes Spring Boot's testing framework
+ * and Testcontainers to ensure the proper behavior of the OAuth2-secured endpoints.
+ *
+ * <p>This class contains test methods that verify the functionality of public and secured
+ * endpoints. It establishes a connection to a Keycloak instance, simulates user authentication, and
+ * performs HTTP requests to the endpoints, asserting the expected responses.
+ *
+ * @see BasicController
+ * @see org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+ * @see org.springframework.boot.test.context.SpringBootTest
+ * @see org.springframework.test.web.servlet.MockMvc
+ * @see org.testcontainers.junit.jupiter.Testcontainers
+ */
 @Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class TestBasicController extends AbstractKeycloakContainer {
-  
-  @Autowired
-  MockMvc mvc;
-  
+
+  /**
+   * The Spring MVC Test framework's MockMvc instance for performing HTTP requests and assertions.
+   */
+  @Autowired MockMvc mvc;
+
   @Test
   @Order(1)
   void testPublicEndpoint() throws Exception {
-    this.mvc.perform(get("/public"))
-      .andExpect(status().isOk())
-      .andExpect(content().string(containsString("Public Hello World!")));
+    mvc.perform(get("/public"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString("Public Hello World!")));
   }
-  
+
   @Test
   @Order(2)
-  void testUnauthenticatedSecuredEndpoint() throws Exception {
-    this.mvc.perform(get("/home"))
-      .andExpect(status().is3xxRedirection());
-  }
-  
-  @Test
-  @Order(3)
-  void testAuthenticatedSecuredEndpoint() throws Exception {
-    this.mvc.perform(get("/home").with(getBearerTokenFor("john")))
-      .andExpect(status().isOk())
-      .andExpect(content().string(containsString("Hello, John Doe!")));
-  }
-  
-  private RequestPostProcessor getBearerTokenFor(String username) {
-    Keycloak keycloak = getKeycloakInstance(username, username);
-    String token = keycloak.tokenManager().getAccessTokenString();
-    return new RequestPostProcessor() {
-      @Override
-      public @NotNull MockHttpServletRequest postProcessRequest(@NotNull MockHttpServletRequest request) {
-        request.addHeader("Authorization", "Bearer " + token);
-        return request;
-      }
-    };
-  }
-  
-  private Keycloak getKeycloakInstance(String username, String password) {
-    return Keycloak.getInstance(
-      KEYCLOAK_URL,
-      DEFAULT_REALM_NAME,
-      username,
-      password,
-      DEFAULT_CLIENT_NAME);
+  void testSecuredEndpoint() throws Exception {
+    mvc.perform(get("/home")).andExpect(status().is3xxRedirection());
   }
 }

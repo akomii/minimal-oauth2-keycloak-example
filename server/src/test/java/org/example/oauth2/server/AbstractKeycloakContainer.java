@@ -4,6 +4,17 @@ import java.nio.file.Paths;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+/**
+ * The {@code AbstractKeycloakContainer} class serves as a base class for initializing a Keycloak
+ * container for integration testing purposes. It uses Testcontainers to manage a Keycloak instance
+ * with a predefined realm and client configuration.
+ *
+ * <p>This abstract class sets up a Keycloak container with the necessary configuration for testing.
+ * It exposes static fields and methods for accessing the Keycloak instance and its URL.
+ *
+ * @see org.testcontainers.containers.FixedHostPortGenericContainer
+ * @see <a href="https://www.testcontainers.org/" target="_blank">Testcontainers</a>
+ */
 abstract class AbstractKeycloakContainer {
 
   protected static final FixedHostPortGenericContainer KEYCLOAK;
