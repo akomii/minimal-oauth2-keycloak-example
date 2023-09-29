@@ -48,9 +48,8 @@ public class BasicController {
   }
 
   @GetMapping("/logout")
-  public String logout(HttpServletRequest request) throws Exception {
+  public void logout(HttpServletRequest request) throws Exception {
     request.logout();
-    return "redirect:/";
   }
 
   private String printUserName(OAuth2User user) {
