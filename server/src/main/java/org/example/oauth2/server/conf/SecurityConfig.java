@@ -10,13 +10,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Configuration class responsible for configuring security settings for the Spring Boot
- * application. This class enables web security and method-level security, defines HTTP
- * security rules, and configures OAuth2 login and logout behavior. It also handles cross-origin
- * resource sharing (CORS) and CSRF protection.
- * <p></p>
- * The class specifies access control rules for different endpoints, such as allowing public
- * access to certain paths and requiring authentication for others. It also configures OAuth2
- * login and logout behavior, including redirecting after a successful logout.
+ * application. This class enables web security and method-level security, defines HTTP security
+ * rules, and configures OAuth2 login and logout behavior. It also handles cross-origin resource
+ * sharing (CORS) and CSRF protection.
+ *
+ * <p>The class specifies access control rules for different endpoints, such as allowing public
+ * access to certain paths and requiring authentication for others. It also configures OAuth2 login
+ * and logout behavior, including redirecting after a successful logout.
  *
  * @author Alexander Kombeiz
  * @version 1.0
@@ -26,14 +26,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-  
+
   /**
-   * Custom variable that holds the URL to which users are redirected after successfully logging
-   * out of the application.
+   * Custom variable that holds the URL to which users are redirected after successfully logging out
+   * of the application.
    */
   @Value("${spring.security.oauth2.client.provider.my-oauth2-client.logout-url}")
   private String logoutUrl;
-  
+
   /**
    * Configures the security filter chain for handling HTTP security in the Spring Boot application.
    * This method defines the security rules for different endpoints, specifying which paths are
@@ -48,16 +48,17 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(authorize -> authorize
-        .requestMatchers("/public").permitAll()
-        .anyRequest().authenticated());
+    http.authorizeHttpRequests(
+        authorize -> authorize.requestMatchers("/public").permitAll().anyRequest().authenticated());
     http.oauth2Login();
-    http.logout(logout -> logout
-        .logoutSuccessHandler((request, response, authentication) ->
-          response.sendRedirect(logoutUrl))
-        .invalidateHttpSession(true)
-        .clearAuthentication(true)
-        .deleteCookies("JSESSIONID"));
+    http.logout(
+        logout ->
+            logout
+                .logoutSuccessHandler(
+                    (request, response, authentication) -> response.sendRedirect(logoutUrl))
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID"));
     http.cors().and().csrf().disable();
     return http.build();
   }
