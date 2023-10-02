@@ -33,7 +33,7 @@ public class Oauth2UserInfoMapper {
    * keys used to navigate and extract user roles from OAuth2 claims. It is used to configure the
    * mapping of roles from user claims to Spring Security authorities.
    */
-  @Value("${spring.security.oauth2.client.provider.my-oauth2-client.claims.roles}")
+  @Value("${spring.security.oauth2.client.provider.my-oauth2-client.authorities.roles}")
   private String rolesKeyChain;
 
   private String[] rolesKeys;
