@@ -65,7 +65,6 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID"));
-    http.cors().and().csrf().disable();
     return http.build();
   }
 }
