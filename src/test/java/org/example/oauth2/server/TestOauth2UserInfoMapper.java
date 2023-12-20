@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023 Alexander Kombeiz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package org.example.oauth2.server;
 
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +49,7 @@ import org.junit.jupiter.api.Test;
  * @see java.lang.reflect.InvocationTargetException
  * @see java.lang.reflect.Method
  */
-public class TestOauth2UserInfoMapper {
+class TestOauth2UserInfoMapper {
 
   private Oauth2UserInfoMapper userInfoMapper;
 
@@ -44,7 +68,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void testGetNestedListForKey()
+  void testGetNestedListForKey()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Map<String, Object> input =
         Map.of(
@@ -57,7 +81,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void firstMapEntryIsMissing() {
+  void firstMapEntryIsMissing() {
     Map<String, Object> input =
         Map.of("oauth2-demo-client", Map.of("roles", List.of("USER2", "USER")));
     String[] keys = {"resource_access", "oauth2-demo-client", "roles"};
@@ -71,7 +95,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void lastMapEntryIsMissing() {
+  void lastMapEntryIsMissing() {
     Map<String, Object> input =
         Map.of("resource_access", Map.of("oauth2-demo-client", Map.of("selor", List.of())));
     String[] keys = {"resource_access", "oauth2-demo-client", "roles"};
@@ -85,7 +109,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void firstKeyIsMissing() {
+  void firstKeyIsMissing() {
     Map<String, Object> input =
         Map.of(
             "resource_access",
@@ -101,7 +125,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void lastKeyIsMissing() {
+  void lastKeyIsMissing() {
     Map<String, Object> input =
         Map.of(
             "resource_access",
@@ -119,7 +143,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void emptyKeys() {
+  void emptyKeys() {
     Map<String, Object> input =
         Map.of(
             "resource_access",
@@ -135,7 +159,7 @@ public class TestOauth2UserInfoMapper {
   }
 
   @Test
-  public void rolesContainsNotList() {
+  void rolesContainsNotList() {
     Map<String, Object> input =
         Map.of("resource_access", Map.of("oauth2-demo-client", Map.of("roles", "USER")));
     String[] keys = {"resource_access", "oauth2-demo-client", "roles"};

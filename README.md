@@ -6,7 +6,7 @@ Access to secure resources is redirected to Keycloak for authentication, while a
 
 It's important to note that this application acts as an OAuth2 client, not an OAuth2 resource server. It doesn't manage resources in terms of data or functionality; instead, it serves static HTML pages (which are session-secured).
 
-### `application.yml` Configuration
+### Configuration
 
 The `application.yml` file is the configuration file for this OAuth2 client application. It contains settings related to security, authentication, and other application-specific configurations. Below is an overview of the key sections within this file:
 

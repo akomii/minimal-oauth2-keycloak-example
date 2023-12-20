@@ -1,12 +1,30 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023 Alexander Kombeiz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package org.example.oauth2.server.conf;
 
 import jakarta.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +32,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+
+import java.util.*;
 
 /**
  * This class is responsible for mapping user roles from OAuth2 claims to Spring Security
@@ -27,7 +47,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
  */
 @Configuration
 public class Oauth2UserInfoMapper {
-
+  
   /**
    * This variable holds a Spring configuration property that defines the dot-separated chain of
    * keys used to navigate and extract user roles from OAuth2 claims. It is used to configure the
@@ -35,14 +55,14 @@ public class Oauth2UserInfoMapper {
    */
   @Value("${spring.security.oauth2.client.provider.my-oauth2-client.authorities.roles}")
   private String rolesKeyChain;
-
+  
   private String[] rolesKeys;
-
+  
   @PostConstruct
   public void init() {
     rolesKeys = rolesKeyChain.split("\\.");
   }
-
+  
   /**
    * Generates a custom Spring Security GrantedAuthoritiesMapper to map user roles from OAuth2
    * claims. This method defines the logic for extracting and mapping roles from user claims to
@@ -51,7 +71,7 @@ public class Oauth2UserInfoMapper {
    * control.
    *
    * @return A GrantedAuthoritiesMapper for mapping user roles from OAuth2 claims to
-   *     GrantedAuthorities.
+   *   GrantedAuthorities.
    * @since 28-09-2023
    */
   @Bean
@@ -59,16 +79,16 @@ public class Oauth2UserInfoMapper {
     return authorities -> {
       Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
       authorities.stream()
-          .filter(OidcUserAuthority.class::isInstance)
-          .map(OidcUserAuthority.class::cast)
-          .map(OidcUserAuthority::getUserInfo)
-          .map(userInfo -> getNestedListForKey(userInfo.getClaims(), rolesKeys))
-          .map(roles -> (Collection<String>) roles)
-          .forEach(roles -> mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles)));
+        .filter(OidcUserAuthority.class::isInstance)
+        .map(OidcUserAuthority.class::cast)
+        .map(OidcUserAuthority::getUserInfo)
+        .map(userInfo -> getNestedListForKey(userInfo.getClaims(), rolesKeys))
+        .map(roles -> (Collection<String>) roles)
+        .forEach(roles -> mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles)));
       return mappedAuthorities;
     };
   }
-
+  
   // Retrieves a nested list of values from a hierarchical map using a sequence of keys.
   private List<String> getNestedListForKey(Map<String, Object> map, String[] keys) {
     Object value = map;
@@ -85,7 +105,7 @@ public class Oauth2UserInfoMapper {
         }
       } else {
         throw new IllegalArgumentException(
-            String.format("Key '%s' annot be accessed because it's not a map.", key));
+          String.format("Key '%s' annot be accessed because it's not a map.", key));
       }
     }
     // Check if the final value is a list and return it.
@@ -93,13 +113,13 @@ public class Oauth2UserInfoMapper {
       return (List<String>) value;
     } else {
       throw new IllegalArgumentException(
-          "Last key should contain a list or array of strings, but it does not.");
+        "Last key should contain a list or array of strings, but it does not.");
     }
   }
-
-  private Collection<GrantedAuthority> generateAuthoritiesFromClaim(Collection<String> claim) {
+  
+  private List<SimpleGrantedAuthority> generateAuthoritiesFromClaim(Collection<String> claim) {
     return claim.stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-        .collect(Collectors.toList());
+      .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+      .toList();
   }
 }
